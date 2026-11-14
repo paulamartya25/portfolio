@@ -252,7 +252,22 @@
       font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700;
       color: #040d1a; flex-shrink: 0;
       box-shadow: 0 0 40px rgba(0,212,255,0.35);
-      border: 2px solid rgba(0,212,255,0.3);
+      position: relative;
+      z-index: 2;
+    }
+    .about-avatar::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--cyan), var(--blue), var(--purple), #ec4899, var(--cyan));
+      z-index: -1;
+      filter: blur(6px);
+      opacity: 0.85;
+      animation: spinAurora 6s linear infinite;
+    }
+    @keyframes spinAurora {
+      100% { transform: rotate(360deg); }
     }
     .about-social { display: flex; gap: 0.7rem; }
     .about-social a {
@@ -440,43 +455,128 @@
       border: 2px solid var(--cyan); animation: ringPulse 2s infinite;
     }
 
+    /* ===== CARD SPOTLIGHT & AMBIENT AURORA ===== */
+    .ambient-aurora {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(130px);
+      opacity: 0.22;
+    }
+    .aurora-1 {
+      width: 550px; height: 550px;
+      top: 5%; left: -100px;
+      background: radial-gradient(circle, #00d4ff 0%, rgba(0,148,255,0) 70%);
+      animation: floatAurora1 20s ease-in-out infinite alternate;
+    }
+    .aurora-2 {
+      width: 650px; height: 650px;
+      top: 50%; right: -120px;
+      background: radial-gradient(circle, #7c3aed 0%, rgba(124,58,237,0) 70%);
+      animation: floatAurora2 24s ease-in-out infinite alternate;
+    }
+    .aurora-3 {
+      width: 500px; height: 500px;
+      bottom: 5%; left: 20%;
+      background: radial-gradient(circle, #0094ff 0%, rgba(0,212,255,0) 70%);
+      animation: floatAurora1 16s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes floatAurora1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.15); } }
+    @keyframes floatAurora2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-80px, -60px) scale(0.9); } }
+
+    .project-card, .why-card, .about-card, .exp-card {
+      position: relative;
+    }
+    .project-card::after, .why-card::after, .about-card::after, .exp-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(500px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(0, 212, 255, 0.12), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .project-card:hover::after, .why-card:hover::after, .about-card:hover::after, .exp-card:hover::after {
+      opacity: 1;
+    }
+
     /* ===== PROJECTS ===== */
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.6rem; }
     .project-card {
       padding: 0;
       display: flex; flex-direction: column;
-      transition: all 0.35s ease;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative; overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
     }
-    .project-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(0,212,255,0.05), transparent 60%);
-      opacity: 0; transition: opacity 0.3s; z-index: 1; pointer-events: none;
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,212,255,0.18), 0 0 0 1px rgba(0,212,255,0.4);
+      border-color: rgba(0, 212, 255, 0.4);
     }
-    .project-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(0,212,255,0.14), 0 0 0 1px rgba(0,212,255,0.3); }
-    .project-card:hover::before { opacity: 1; }
+    .project-img-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px 18px 0 0;
+      flex-shrink: 0;
+      background: #060e1a;
+      height: 195px;
+    }
     .project-img {
-      width: 100%; height: 190px; object-fit: cover;
-      display: block; border-radius: 16px 16px 0 0;
-      filter: brightness(0.88) saturate(1.1);
-      transition: filter 0.3s, transform 0.4s;
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      filter: brightness(0.9) saturate(1.1);
+      transition: filter 0.35s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .project-card:hover .project-img { filter: brightness(1) saturate(1.2); transform: scale(1.03); }
-    .project-img-wrap { overflow: hidden; border-radius: 16px 16px 0 0; flex-shrink: 0; }
+    .project-card:hover .project-img {
+      filter: brightness(1.05) saturate(1.2);
+      transform: scale(1.04);
+    }
+    .project-img-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 3;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      background: rgba(4, 13, 26, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .badge-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px currentColor;
+    }
     .project-no-img {
       width: 100%; height: 130px; display: flex; align-items: center; justify-content: center;
-      border-radius: 16px 16px 0 0;
+      border-radius: 18px 18px 0 0;
       font-size: 3rem;
       background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.08));
       border-bottom: 1px solid var(--glass-border);
     }
-    .project-body { padding: 1.4rem 1.6rem; display: flex; flex-direction: column; gap: 0.8rem; flex: 1; }
-    .project-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
-    .project-desc { font-size: 0.87rem; color: var(--text-muted); line-height: 1.75; flex: 1; }
-    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .project-body { padding: 1.5rem 1.65rem; display: flex; flex-direction: column; gap: 0.85rem; flex: 1; z-index: 2; }
+    .project-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .project-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.75; flex: 1; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
     .tag {
-      padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.72rem; font-weight: 500;
-      background: rgba(0,212,255,0.1); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2);
+      padding: 0.22rem 0.65rem; border-radius: 100px; font-size: 0.72rem; font-weight: 500;
+      background: rgba(0,212,255,0.08); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2);
     }
     .project-link {
       display: inline-flex; align-items: center; gap: 0.4rem;
@@ -611,6 +711,11 @@
   </style>
 </head>
 <body>
+
+  <!-- Ambient Aurora Glow Orbs -->
+  <div class="ambient-aurora aurora-1"></div>
+  <div class="ambient-aurora aurora-2"></div>
+  <div class="ambient-aurora aurora-3"></div>
 
   <!-- ===== NITRO RADIATION CURSOR ===== -->
   <canvas id="nitroCanvas"></canvas>
@@ -816,6 +921,7 @@
       <!-- VisionAI -->
       <div class="glass project-card reveal reveal-delay-1">
         <div class="project-img-wrap">
+          <span class="project-img-badge"><span class="badge-status-dot"></span>Real-Time YOLOv8 · 56.01% mAP</span>
           <img class="project-img" src="https://raw.githubusercontent.com/paulamartya25/web_monitoring-/master/docs/demo/detection_traffic_jam_100.jpg" alt="VisionAI — traffic detection screenshot" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'project-no-img\'>🎥</div>'"/>
         </div>
         <div class="project-body">
@@ -836,6 +942,7 @@
       <!-- SecureLens -->
       <div class="glass project-card reveal reveal-delay-2">
         <div class="project-img-wrap">
+          <span class="project-img-badge"><span class="badge-status-dot" style="background:#00d4ff;"></span>128-bit CKKS FHE · Medical AI</span>
           <img class="project-img" src="assets/securelens_preview.png" alt="SecureLens — Privacy-Preserving Medical AI" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'project-no-img\'>🔒</div>'"/>
         </div>
         <div class="project-body">
@@ -856,7 +963,8 @@
       <!-- Cover Drive -->
       <div class="glass project-card reveal reveal-delay-3">
         <div class="project-img-wrap">
-          <img class="project-img" src="assets/cover_drive_analysis.png" alt="Cover Drive biomechanical pose analysis" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'project-no-img\'>🏏</div>'"/>
+          <span class="project-img-badge"><span class="badge-status-dot" style="background:#10b981;"></span>YOLOv8-Pose · 6-Joint Biomechanics</span>
+          <img class="project-img" src="assets/demo_screenshot.png" alt="Cover Drive biomechanical pose analysis" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'project-no-img\'>🏏</div>'"/>
         </div>
         <div class="project-body">
           <div class="project-title">Cover Drive Analysis — Pose AI</div>
@@ -876,6 +984,7 @@
       <!-- detour.maniac.ai -->
       <div class="glass project-card reveal reveal-delay-4">
         <div class="project-img-wrap">
+          <span class="project-img-badge"><span class="badge-status-dot" style="background:#a855f7;"></span>Agentic RAG · Llama 3 (8B)</span>
           <img class="project-img" src="assets/detour_preview.png" alt="detour.maniac.ai — Agentic AI Travel Planner" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'project-no-img\'>🗺️</div>'"/>
         </div>
         <div class="project-body">
@@ -896,6 +1005,7 @@
       <!-- Multilingual Fraud -->
       <div class="glass project-card reveal reveal-delay-5">
         <div class="project-img-wrap">
+          <span class="project-img-badge"><span class="badge-status-dot" style="background:#f59e0b;"></span>DistilBERT + SMOTE · 95% Acc</span>
           <img class="project-img" src="assets/fraud_shield_preview.png" alt="FraudShield AI — Multilingual Fraud Detection" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'project-no-img\'>🛡️</div>'"/>
         </div>
         <div class="project-body">
@@ -1373,6 +1483,15 @@
       }
       render();
     })();
+
+    // ===== CARD SPOTLIGHT EFFECT =====
+    document.querySelectorAll('.project-card, .why-card, .about-card, .exp-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
   </script>
 </body>
 </html>
