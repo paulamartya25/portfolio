@@ -171,10 +171,77 @@
     }
     .glass:hover { border-color: rgba(0,212,255,0.25); box-shadow: 0 8px 40px rgba(0,212,255,0.08); }
 
+    /* ===== NITRO RADIATION CURSOR ===== */
+    @media (hover: hover) and (pointer: fine) {
+      body {
+        cursor: none;
+      }
+      a, button, [role="button"], input, select, textarea, .project-card, .why-card, .badge, .tag, .project-link, .btn-primary, .btn-outline {
+        cursor: none !important;
+      }
+    }
+    #nitroCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999998;
+    }
+    .nitro-cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ffff;
+      box-shadow: 0 0 10px #00ffff, 0 0 20px #0094ff, 0 0 35px rgba(0, 240, 255, 0.9);
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+      transition: width 0.15s, height 0.15s, background-color 0.2s, box-shadow 0.2s;
+      opacity: 0;
+    }
+    .nitro-cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0, 220, 255, 0.7);
+      background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, rgba(168, 85, 247, 0.05) 70%, transparent 100%);
+      box-shadow: 0 0 16px rgba(0, 212, 255, 0.5), inset 0 0 10px rgba(0, 212, 255, 0.3);
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+      transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), height 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+      opacity: 0;
+    }
+    .nitro-cursor-ring.hovering {
+      width: 52px;
+      height: 52px;
+      border-color: rgba(0, 255, 255, 0.95);
+      box-shadow: 0 0 26px rgba(0, 255, 255, 0.8), 0 0 48px rgba(168, 85, 247, 0.55), inset 0 0 16px rgba(0, 255, 255, 0.4);
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.22) 0%, rgba(168, 85, 247, 0.15) 75%, transparent 100%);
+    }
+    .nitro-cursor-dot.hovering {
+      width: 12px;
+      height: 12px;
+      background: #ffffff;
+      box-shadow: 0 0 16px #ffffff, 0 0 28px #00ffff, 0 0 45px #a855f7;
+    }
+    .nitro-cursor-ring.clicking {
+      transform: translate(-50%, -50%) scale(0.72);
+      border-color: #ffffff;
+      box-shadow: 0 0 35px #00ffff, 0 0 60px #a855f7;
+    }
+
     /* ===== ABOUT ===== */
     #about { display: block; padding-top: 7rem; }
     .about-card {
-      padding: 2.5rem 3rem;
+      padding: 2.8rem 3rem;
       display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: start;
     }
     .about-left { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
@@ -196,45 +263,173 @@
     }
     .about-social a:hover { color: var(--cyan); border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.08); transform: translateY(-2px); }
     .about-social svg { width: 16px; height: 16px; }
-    .about-text p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.9; margin-bottom: 1.5rem; }
+    .about-text p { color: #cbd5e1; font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.4rem; }
     .about-text p strong { color: var(--cyan); }
-    .about-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 0.5rem; }
-    .stat-item { display: flex; flex-direction: column; }
-    .stat-num {
-      font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700;
-      background: linear-gradient(135deg, var(--cyan), var(--blue));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    
+    .about-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .highlight-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      font-size: 0.94rem;
+      color: var(--text-muted);
+    }
+    .highlight-bullet {
+      color: var(--cyan);
+      font-size: 1rem;
+      flex-shrink: 0;
       line-height: 1;
     }
-    .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; letter-spacing: 0.05em; }
+    .highlight-title {
+      color: #fff;
+      font-weight: 600;
+      margin-right: 0.35rem;
+    }
+    .highlight-val {
+      color: #94a3b8;
+    }
+    .about-meta-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.5rem;
+    }
+    .meta-chip {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #94a3b8;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.09);
+      padding: 0.4rem 0.95rem;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.25s;
+    }
+    .meta-chip:hover {
+      color: #e2e8f0;
+      border-color: rgba(0, 212, 255, 0.3);
+      background: rgba(0, 212, 255, 0.05);
+    }
 
     /* ===== WHY ME ===== */
-    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.6rem; margin-bottom: 2.2rem; }
     .why-card {
-      padding: 2rem;
-      background: linear-gradient(135deg, rgba(0,212,255,0.04) 0%, rgba(0,148,255,0.04) 100%);
-      border: 1px solid rgba(0,212,255,0.12);
-      border-radius: 16px;
+      padding: 2.2rem 2rem;
+      background: linear-gradient(135deg, rgba(8, 22, 44, 0.65) 0%, rgba(5, 14, 28, 0.75) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: 18px;
       position: relative; overflow: hidden;
-      transition: all 0.3s ease;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
     }
     .why-card::before {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(0,212,255,0.08), transparent);
-      opacity: 0; transition: opacity 0.3s;
+      background: radial-gradient(circle at 15% 0%, rgba(0,212,255,0.12), transparent 70%);
+      opacity: 0; transition: opacity 0.35s; pointer-events: none;
     }
-    .why-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.35); }
+    .why-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 45px rgba(0,212,255,0.14), 0 0 0 1px rgba(0,212,255,0.35);
+      border-color: rgba(0,212,255,0.45);
+    }
     .why-card:hover::before { opacity: 1; }
-    .why-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .why-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; color: #fff; }
-    .why-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+    .why-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.3rem;
+    }
+    .why-tag {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.22);
+      padding: 0.28rem 0.65rem;
+      border-radius: 6px;
+    }
+    .why-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.14), rgba(124, 58, 237, 0.14));
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .why-card:hover .why-icon-box {
+      transform: scale(1.08) rotate(3deg);
+      box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+      color: #fff;
+    }
+    .why-icon-box svg {
+      width: 22px;
+      height: 22px;
+    }
+    .why-card h3 {
+      font-size: 1.22rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+    .why-card p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 1.35rem;
+      flex: 1;
+    }
+    .why-traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: auto;
+      padding-top: 1.1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .why-trait {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      padding: 0.22rem 0.65rem;
+      transition: all 0.2s;
+    }
+    .why-card:hover .why-trait {
+      color: #cbd5e1;
+      border-color: rgba(0, 212, 255, 0.25);
+    }
     .opportunity-banner {
       display: flex; align-items: center; justify-content: center; gap: 1rem;
-      padding: 1.2rem 2rem; border-radius: 12px;
+      padding: 1.25rem 2.2rem; border-radius: 14px;
       background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.08));
-      border: 1px solid rgba(0,212,255,0.2);
+      border: 1px solid rgba(0,212,255,0.24);
       font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 600;
-      color: var(--text);
+      color: #f1f5f9;
+      box-shadow: 0 8px 30px rgba(0, 212, 255, 0.06);
+      text-align: center;
     }
     .pulse-dot {
       width: 10px; height: 10px; border-radius: 50%; background: var(--cyan);
@@ -399,7 +594,8 @@
       .nav-links a { display: block; padding: 0.8rem 2rem; }
       .about-card { grid-template-columns: 1fr; text-align: center; }
       .about-left { margin: 0 auto; }
-      .about-stats { justify-content: center; }
+      .about-highlights { text-align: left; max-width: 520px; margin-left: auto; margin-right: auto; }
+      .about-meta-chips { justify-content: center; }
 
       .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
       .timeline::before { left: 12px; }
@@ -415,6 +611,11 @@
   </style>
 </head>
 <body>
+
+  <!-- ===== NITRO RADIATION CURSOR ===== -->
+  <canvas id="nitroCanvas"></canvas>
+  <div class="nitro-cursor-dot" id="nitroDot"></div>
+  <div class="nitro-cursor-ring" id="nitroRing"></div>
 
   <!-- ===== NAVBAR ===== -->
   <nav id="navbar">
@@ -484,15 +685,36 @@
       </div>
       <div class="about-text">
         <p>
-          Final-year B.Tech student in <strong>Data Science &amp; Artificial Intelligence</strong> at IIIT Naya Raipur.
-          I build <strong>production-ready AI systems</strong> — bridging research, engineering, and deployment.
-          From encrypted medical diagnostics to real-time aerial detection, I turn complex ML ideas into working products.
+          Final-year B.Tech in <strong>Data Science &amp; Artificial Intelligence</strong> at IIIT Naya Raipur.
+          I specialize in building <strong>production-ready AI systems</strong> — taking complex machine learning architectures from research hypotheses to resilient, low-latency deployments.
         </p>
-        <div class="about-stats">
-          <div class="stat-item"><span class="stat-num">5+</span><span class="stat-label">AI Projects Shipped</span></div>
-          <div class="stat-item"><span class="stat-num">350+</span><span class="stat-label">Problems Solved</span></div>
-          <div class="stat-item"><span class="stat-num">91%+</span><span class="stat-label">Model Accuracy</span></div>
-          <div class="stat-item"><span class="stat-num">7.53</span><span class="stat-label">CGPA</span></div>
+        <div class="about-highlights">
+          <div class="highlight-item">
+            <span class="highlight-bullet">▹</span>
+            <div>
+              <span class="highlight-title">Edge Vision &amp; Real-Time Detection:</span>
+              <span class="highlight-val">Trained &amp; deployed YOLOv8 pipelines with WebSockets, vectorized NumPy metrics, and multi-object tracking.</span>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-bullet">▹</span>
+            <div>
+              <span class="highlight-title">Privacy-Preserving Machine Learning:</span>
+              <span class="highlight-val">Homomorphic Encryption (TenSEAL CKKS) for encrypted clinical inference with zero accuracy degradation.</span>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-bullet">▹</span>
+            <div>
+              <span class="highlight-title">Production Backend &amp; Agents:</span>
+              <span class="highlight-val">High-concurrency async FastAPI services, LangChain/Llama 3 RAG workflows, and multi-container Docker Compose architectures.</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-meta-chips">
+          <span class="meta-chip">🎓 IIIT Naya Raipur · B.Tech (2022–2026)</span>
+          <span class="meta-chip">🚀 Open to SWE &amp; AI/ML Opportunities</span>
+          <span class="meta-chip">📍 India · Remote &amp; On-Site</span>
         </div>
       </div>
     </div>
@@ -504,25 +726,80 @@
     <h2 class="section-title reveal">Why Me?</h2>
     <div class="section-divider reveal"></div>
     <div class="why-grid">
+      
+      <!-- Card 1 -->
       <div class="why-card reveal reveal-delay-1">
-        <div class="why-icon">🔬</div>
+        <div class="why-top">
+          <span class="why-tag">01 // Empirical Rigor</span>
+          <div class="why-icon-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5s-2.5-1.1-2.5-2.5V2"/>
+              <path d="M8.5 2h7"/>
+              <path d="M14.5 16h-5"/>
+              <path d="M6 10l2 2"/>
+              <path d="M18 10l-2 2"/>
+            </svg>
+          </div>
+        </div>
         <h3>Research-Oriented Mindset</h3>
-        <p>I go beyond tutorials. Every project is backed by ablation studies, metric-driven decisions, and academic rigor.</p>
+        <p>
+          I ground system design in empirical experiments rather than intuition. Every model iteration is audited through controlled ablation studies, statistical baselines, and granular error breakdowns.
+        </p>
+        <div class="why-traits">
+          <span class="why-trait">Ablation Studies</span>
+          <span class="why-trait">Baseline Auditing</span>
+          <span class="why-trait">Empirical Rigor</span>
+        </div>
       </div>
+
+      <!-- Card 2 -->
       <div class="why-card reveal reveal-delay-2">
-        <div class="why-icon">⚡</div>
+        <div class="why-top">
+          <span class="why-tag">02 // Adaptability &amp; Velocity</span>
+          <div class="why-icon-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+        </div>
         <h3>Eager to Adapt</h3>
-        <p>Whether it's a new framework, a bleeding-edge paper, or an unfamiliar domain — I ramp up fast and deliver.</p>
+        <p>
+          Rapid technical ramp-up across unfamiliar libraries and bleeding-edge literature. From homomorphic cryptosystems (TenSEAL CKKS) to asynchronous streaming and agentic LLMs, I turn papers into working software quickly.
+        </p>
+        <div class="why-traits">
+          <span class="why-trait">Paper-to-Production</span>
+          <span class="why-trait">Fast Tech Ramp-Up</span>
+          <span class="why-trait">Full-Stack Execution</span>
+        </div>
       </div>
+
+      <!-- Card 3 -->
       <div class="why-card reveal reveal-delay-3">
-        <div class="why-icon">🧠</div>
+        <div class="why-top">
+          <span class="why-tag">03 // Root-Cause Depth</span>
+          <div class="why-icon-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+              <path d="M2 12h20"/>
+            </svg>
+          </div>
+        </div>
         <h3>Deep Analyzer</h3>
-        <p>I don't just train models. I interrogate data, question baselines, and optimize until the numbers mean something real.</p>
+        <p>
+          I interrogate edge cases, data distribution skew, and runtime latency rather than treating models as black boxes. I profile end-to-end bottlenecks and optimize code until performance holds under stress.
+        </p>
+        <div class="why-traits">
+          <span class="why-trait">Sub-100ms Profiling</span>
+          <span class="why-trait">Edge-Case Discovery</span>
+          <span class="why-trait">Vectorized NumPy</span>
+        </div>
       </div>
+
     </div>
     <div class="opportunity-banner reveal">
       <div class="pulse-dot"></div>
-      Open to SWE / AI-ML Opportunities 🚀
+      <span>Open to SWE &amp; AI/ML Opportunities — Let's engineer something exceptional</span>
     </div>
   </section>
 
@@ -871,6 +1148,222 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
+
+    // ===== NITRO SPECIAL RADIATION CURSOR =====
+    (function() {
+      if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches) {
+        return;
+      }
+
+      const canvas = document.getElementById('nitroCanvas');
+      const dot = document.getElementById('nitroDot');
+      const ring = document.getElementById('nitroRing');
+      if (!canvas || !dot || !ring) return;
+
+      const ctx = canvas.getContext('2d');
+      let W = (canvas.width = window.innerWidth);
+      let H = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      });
+
+      let mouse = { x: -100, y: -100, prevX: -100, prevY: -100 };
+      let ringPos = { x: -100, y: -100 };
+      let isVisible = false;
+      let isHovering = false;
+
+      const nitroColors = [
+        '#00ffff',
+        '#38bdf8',
+        '#0094ff',
+        '#a855f7',
+        '#c084fc',
+        '#ffffff'
+      ];
+
+      class NitroSpark {
+        constructor(x, y, vx, vy, color, isBurst = false) {
+          this.x = x;
+          this.y = y;
+          this.vx = vx;
+          this.vy = vy;
+          this.color = color;
+          this.life = 0;
+          this.maxLife = isBurst ? 28 + Math.random() * 20 : 18 + Math.random() * 15;
+          this.size = isBurst ? 2 + Math.random() * 4 : 1.5 + Math.random() * 2.5;
+          this.rotation = Math.random() * Math.PI * 2;
+          this.rotSpeed = (Math.random() - 0.5) * 0.2;
+          this.isStar = Math.random() > 0.45;
+          this.alpha = 1;
+        }
+
+        update() {
+          this.vx *= 0.94;
+          this.vy *= 0.94;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.rotation += this.rotSpeed;
+          this.life++;
+          this.alpha = Math.max(0, 1 - (this.life / this.maxLife));
+        }
+
+        draw(ctx) {
+          if (this.alpha <= 0) return;
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate(this.rotation);
+          ctx.globalAlpha = this.alpha;
+
+          if (this.isStar) {
+            const r = this.size * 2.2;
+            const inner = this.size * 0.4;
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.moveTo(0, -r);
+            ctx.quadraticCurveTo(0, 0, r, 0);
+            ctx.quadraticCurveTo(0, 0, 0, r);
+            ctx.quadraticCurveTo(0, 0, -r, 0);
+            ctx.quadraticCurveTo(0, 0, 0, -r);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(0, -inner * 2);
+            ctx.lineTo(inner * 2, 0);
+            ctx.lineTo(0, inner * 2);
+            ctx.lineTo(-inner * 2, 0);
+            ctx.closePath();
+            ctx.fill();
+          } else {
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      let sparks = [];
+
+      function spawnSparks(x, y, count, speedMult = 1, isBurst = false) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = (Math.random() * 3.5 + 0.8) * speedMult;
+          const vx = Math.cos(angle) * speed;
+          const vy = Math.sin(angle) * speed;
+          const color = nitroColors[Math.floor(Math.random() * nitroColors.length)];
+          sparks.push(new NitroSpark(x, y, vx, vy, color, isBurst));
+        }
+        if (sparks.length > 200) {
+          sparks.splice(0, sparks.length - 200);
+        }
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isVisible) {
+          isVisible = true;
+          dot.style.opacity = '1';
+          ring.style.opacity = '1';
+        }
+
+        const dx = e.clientX - mouse.x;
+        const dy = e.clientY - mouse.y;
+        const dist = Math.hypot(dx, dy);
+
+        mouse.prevX = mouse.x;
+        mouse.prevY = mouse.y;
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+
+        dot.style.left = mouse.x + 'px';
+        dot.style.top = mouse.y + 'px';
+
+        if (dist > 3) {
+          const count = isHovering ? (Math.random() > 0.4 ? 2 : 1) : (Math.random() > 0.6 ? 2 : 1);
+          const offsetDist = Math.random() * 4;
+          const angle = Math.random() * Math.PI * 2;
+          const px = mouse.x + Math.cos(angle) * offsetDist;
+          const py = mouse.y + Math.sin(angle) * offsetDist;
+          spawnSparks(px, py, count, isHovering ? 1.3 : 1.0, false);
+        }
+      });
+
+      window.addEventListener('mouseleave', () => {
+        isVisible = false;
+        dot.style.opacity = '0';
+        ring.style.opacity = '0';
+      });
+
+      window.addEventListener('mousedown', (e) => {
+        ring.classList.add('clicking');
+        spawnSparks(e.clientX, e.clientY, 26, 2.8, true);
+      });
+
+      window.addEventListener('mouseup', () => {
+        ring.classList.remove('clicking');
+      });
+
+      const interactiveSelector = 'a, button, [role="button"], input, select, textarea, .project-card, .why-card, .badge, .tag, .project-link, .btn-primary, .btn-outline, .about-card, .exp-card';
+      document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveSelector)) {
+          isHovering = true;
+          ring.classList.add('hovering');
+          dot.classList.add('hovering');
+        }
+      });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveSelector)) {
+          isHovering = false;
+          ring.classList.remove('hovering');
+          dot.classList.remove('hovering');
+        }
+      });
+
+      function render() {
+        ctx.clearRect(0, 0, W, H);
+
+        ringPos.x += (mouse.x - ringPos.x) * 0.18;
+        ringPos.y += (mouse.y - ringPos.y) * 0.18;
+        ring.style.left = ringPos.x + 'px';
+        ring.style.top = ringPos.y + 'px';
+
+        if (isHovering && Math.random() > 0.6) {
+          const angle = Math.random() * Math.PI * 2;
+          const radius = 24 + Math.random() * 8;
+          spawnSparks(mouse.x + Math.cos(angle) * radius, mouse.y + Math.sin(angle) * radius, 1, 0.7, false);
+        }
+
+        for (let i = sparks.length - 1; i >= 0; i--) {
+          const sp = sparks[i];
+          sp.update();
+          if (sp.alpha <= 0) {
+            sparks.splice(i, 1);
+          } else {
+            sp.draw(ctx);
+          }
+        }
+
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
   </script>
 </body>
 </html>
